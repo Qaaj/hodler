@@ -20,8 +20,7 @@ const loader = () => {
     return spinner[num % 3]
 }
 
-
-const holdings = {
+let holdings = {
     'havven': 1000,
     'ethereum': 100,
     'bitcoin': 10,
@@ -39,6 +38,7 @@ const updateUI = async () => {
                 {name: 'price', title: 'Price'},
                 {name: 'eth', title: 'ETH Price'},
                 {name: 'holdings', title: 'Holdings'},
+                {name: 'percent', title: 'Portfolio Share'},
                 {name: 'total', title: 'Total'},
                 {name: 'h24', title: '24h'},
             ],
@@ -47,6 +47,8 @@ const updateUI = async () => {
         let total = 0;
         Object.entries(holdings).forEach(([id, value]) => {
             total += (value * STATE.prices[id]);
+        });
+        Object.entries(holdings).forEach(([id, value]) => {
             table.addRow({
                 price: STATE.prices[id] ? numbro(STATE.prices[id]).format({
                     mantissa: 1,
@@ -59,6 +61,7 @@ const updateUI = async () => {
                 name: STATE.info[id] ? STATE.info[id].name : load,
                 ticker: STATE.info[id] ? STATE.info[id].symbol.toLocaleUpperCase() : load,
                 holdings: numbro(value).format({thousandSeparated: true}),
+                percent: numbro((value * STATE.prices[id])/total).format({output: 'percent', mantissa: 2}),
                 total: STATE.prices[id] ? numbro(value * STATE.prices[id]).formatCurrency({
                     mantissa: 1,
                     thousandSeparated: true
@@ -114,7 +117,12 @@ const historicalFetcher = async () => {
         setState({historical: {[id]: json, ...historical}});
     });
 }
-
+try {
+    const myHoldings = require('./holdings.js');
+    holdings = myHoldings;
+}catch(err){
+    console.log('Holdings file not found - using fallback')
+}
 priceFetcher();
 informationFetcher();
 historicalFetcher();
