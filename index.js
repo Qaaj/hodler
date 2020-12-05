@@ -6,7 +6,7 @@ const numbro = require('numbro');
 const {Table} = require('console-table-printer');
 
 let num = 0, STATE = {info: {}, historical: {}};
-
+const censored  = false;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const setState = (state) => {
@@ -61,9 +61,9 @@ const updateUI = async () => {
                 }) : load,
                 name: STATE.info[id] ? STATE.info[id].name : load,
                 ticker: STATE.info[id] ? STATE.info[id].symbol.toLocaleUpperCase() : load,
-                holdings: numbro(value).format({thousandSeparated: true}),
+                holdings: censored ? '***' : numbro(value).format({thousandSeparated: true}),
                 percent: numbro((value * STATE.prices[id])/total).format({output: 'percent', mantissa: 2}),
-                total: STATE.prices[id] ? numbro(value * STATE.prices[id]).formatCurrency({
+                total: STATE.prices[id] ? censored ? '***' : numbro(value * STATE.prices[id]).formatCurrency({
                     mantissa: 1,
                     thousandSeparated: true
                 }) : load,
