@@ -1,0 +1,27 @@
+{
+  "name": "hodler",
+  "version": "1.0.0",
+  "description": "CLI tool for checking portfolio performance",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Qaaj/hodler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Qaaj/hodler/issues"
+  },
+  "homepage": "https://github.com/Qaaj/hodler#readme",
+  "dependencies": {
+    "clear": "^0.1.0",
+    "cli-color": "^2.0.0",
+    "clui": "^0.3.6",
+    "lodash": "^4.17.20",
+    "node-fetch": "^2.6.1",
+    "numbro": "^2.3.2"
+  }
+}
