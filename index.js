@@ -66,7 +66,9 @@ const updateUI = async () => {
         })
         table.printTable()
         console.log(' \n')
-        console.log(`  Portfolio value: ${numbro(total).formatCurrency({mantissa: 1, thousandSeparated: true})}`)
+        console.log(`  Portfolio value USD: ${numbro(total).formatCurrency({mantissa: 1, thousandSeparated: true})}`)
+        console.log(`  Portfolio value ETH: ${numbro(total/STATE.prices.ethereum).format({mantissa: 2, thousandSeparated: true})}`)
+        console.log(`  Portfolio value BTC: ${numbro(total/STATE.prices.bitcoin).format({mantissa: 2, thousandSeparated: true})}`)
         console.log(' \n')
         console.log(loader());
         console.log('')
@@ -76,7 +78,7 @@ const updateUI = async () => {
 }
 
 const priceFetcher = async () => {
-    const ids = Object.keys(holdings).join('%2C');
+    const ids = ['ethereum','bitcoin',...Object.keys(holdings)].join('%2C');
     const data = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
     const json = await data.json();
     const result = {};
