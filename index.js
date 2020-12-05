@@ -1,6 +1,5 @@
 const _ = require('lodash');
-const CLI = require('clui'),
-    clc = require('cli-color'),
+const clc = require('cli-color'),
     clear = require('clear');
 const fetch = require('node-fetch');
 const numbro = require('numbro');
