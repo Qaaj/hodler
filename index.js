@@ -49,6 +49,8 @@ const updateUI = async () => {
             total += (value * STATE.prices[id]);
         });
         Object.entries(holdings).forEach(([id, value]) => {
+            const h24 = STATE.info[id] ?STATE.info[id].market_data.price_change_percentage_24h/ 100 : null;
+            const colorFX = (num) => num > 0 ? clc.green : clc.red;
             table.addRow({
                 price: STATE.prices[id] ? numbro(STATE.prices[id]).format({
                     mantissa: 1,
@@ -66,7 +68,7 @@ const updateUI = async () => {
                     mantissa: 1,
                     thousandSeparated: true
                 }) : load,
-                h24: STATE.info[id] ? numbro(STATE.info[id].market_data.price_change_percentage_24h/ 100).format({ output: 'percent', mantissa: 2 }) : load,
+                h24: h24 ? colorFX(h24)(numbro(h24).format({ output: 'percent', mantissa: 2 })) : load,
             })
         })
         table.printTable()
@@ -78,7 +80,7 @@ const updateUI = async () => {
         console.log(loader());
         console.log('')
     }
-    await sleep(250);
+    await sleep(500);
     updateUI();
 }
 
@@ -91,7 +93,7 @@ const priceFetcher = async () => {
         result[key] = price;
     })
     setState({prices: result})
-    await sleep(5000);
+    await sleep(10000);
     priceFetcher();
 }
 
