@@ -40,6 +40,7 @@ const updateUI = async () => {
                 {name: 'eth', title: 'ETH Price'},
                 {name: 'holdings', title: 'Holdings'},
                 {name: 'total', title: 'Total'},
+                {name: 'h24', title: '24h'},
             ],
         });
 
@@ -62,6 +63,7 @@ const updateUI = async () => {
                     mantissa: 1,
                     thousandSeparated: true
                 }) : load,
+                h24: STATE.info[id] ? numbro(STATE.info[id].market_data.price_change_percentage_24h/ 100).format({ output: 'percent', mantissa: 2 }) : load,
             })
         })
         table.printTable()
@@ -108,8 +110,8 @@ const historicalFetcher = async () => {
         await sleep(i * 300);
         const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=30&interval=daily`);
         const json = await data.json();
-        const info = STATE.historical || {};
-        setState({historical: {[id]: json, ...info}});
+        const historical = STATE.historical || {};
+        setState({historical: {[id]: json, ...historical}});
     });
 }
 
