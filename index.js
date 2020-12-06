@@ -7,6 +7,7 @@ const {Table} = require('console-table-printer');
 
 let num = 0, STATE = {info: {}, historical: {}};
 const censored  = false;
+const sleep_interval = 300;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const setState = (state) => {
@@ -99,7 +100,7 @@ const priceFetcher = async () => {
 const informationFetcher = () => {
     const ids = Object.keys(holdings);
     ids.forEach(async (id, i) => {
-        await sleep(i * 300);
+        await sleep(i * sleep_interval);
         const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
         const json = await data.json();
         const info = STATE.info || {};
@@ -111,7 +112,7 @@ const historicalFetcher = async () => {
     await sleep(1000);
     const ids = Object.keys(holdings);
     ids.map(async (id, i) => {
-        await sleep(i * 300);
+        await sleep(i * sleep_interval);
         const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=30&interval=daily`);
         const json = await data.json();
         const historical = STATE.historical || {};
