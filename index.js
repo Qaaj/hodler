@@ -10,6 +10,10 @@ const censored  = false;
 const sleep_interval = 300;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+let fiatCurrencyRates = {
+    USD: 1
+};
+
 const setState = (state) => {
     STATE = {...STATE, ...state};
 }
@@ -74,6 +78,7 @@ const updateUI = async () => {
         table.printTable()
         console.log(' \n')
         console.log(`  Portfolio value USD: ${numbro(total).formatCurrency({mantissa: 1, thousandSeparated: true})}`)
+        console.log(`  Portfolio value EUR: ${numbro(total / fiatCurrencyRates.USD).formatCurrency({mantissa: 1, thousandSeparated: true, currencySymbol: "€"})}`)
         console.log(`  Portfolio value ETH: ${numbro(total/STATE.prices.ethereum).format({mantissa: 2, thousandSeparated: true})}`)
         console.log(`  Portfolio value BTC: ${numbro(total/STATE.prices.bitcoin).format({mantissa: 2, thousandSeparated: true})}`)
         console.log(' \n')
@@ -119,13 +124,29 @@ const historicalFetcher = async () => {
         setState({historical: {[id]: json, ...historical}});
     });
 }
+
+const fiatCurrencyRatesFetcher = async () => {
+    try{
+        const currencyRatesEndpoint = `https://api.exchangeratesapi.io/latest?symbols=USD`;
+        const response = await fetch(currencyRatesEndpoint);
+        const json = await response.json();
+        const rates = json.rates;
+        fiatCurrencyRates = rates;
+    }catch(error){
+        console.log(`Failed getting fiat currency rates from api.exchangeratesapi.io:` , error);
+    }
+}
+
 try {
     const myHoldings = require('./holdings.js');
     holdings = myHoldings;
 }catch(err){
     console.log('Holdings file not found - using fallback')
 }
+
+fiatCurrencyRatesFetcher();
 priceFetcher();
 informationFetcher();
 historicalFetcher();
 updateUI();
+
