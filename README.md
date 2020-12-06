@@ -1,7 +1,8 @@
 # Hodler
 CLI tool for checking portfolio performance
 
-## add your holdings in a new `./holdings.js` file:
+## Howto
+Add your holdings in a new `./holdings.js` file:
 ```
 module.exports =  {
     'bitcoin': 1,
