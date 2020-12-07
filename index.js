@@ -15,7 +15,11 @@ let fiatCurrencyRates = {
 };
 
 const setState = (state) => {
-  STATE = { ...STATE, ...state };
+  STATE = { 
+    ...STATE, 
+    ...state, 
+    timestamp: new Date(),
+  };
 }
 
 const loader = () => {
@@ -145,6 +149,8 @@ const updateUI = async () => {
       mantissa: 2,
       thousandSeparated: true
     })}`)
+    console.log(' \n')
+    console.log(`  Timestamp ${STATE.timestamp.toLocaleString()}`);
     console.log(' \n')
     console.log(loader());
     console.log('')
