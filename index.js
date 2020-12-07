@@ -117,8 +117,26 @@ const updateUI = async () => {
     });
 
     const colorFX = (num) => num > 0 ? clc.green : clc.red;
+    
+    const sortHoldingsBy = (sortBy) => ([idA, valueA], [idB, valueB]) => {
+      let rowA;
+      let rowB;
+    
+      switch(sortBy.toLowerCase()){
+        case "usd":
+        default: {
+          rowA = (valueA * STATE.prices[idA]) / totals.usd;
+          rowB = (valueB * STATE.prices[idB]) / totals.usd;
+        }
+      }
 
-    Object.entries(holdings).forEach(([id, value]) => {
+      if (rowA > rowB) return -1;
+      if (rowA <= rowB) return 1;
+    };
+
+    Object.entries(holdings)
+    .sort(sortHoldingsBy("usd"))
+    .forEach(([id, value]) => {
       const row = getRowObject(id, value, totals.usd, load);
       const { up } = row;
       delete row.up;
