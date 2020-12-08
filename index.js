@@ -208,9 +208,10 @@ const informationFetcher = async () => {
         const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
         const json = await data.json();
         const info = STATE.info || {};
-        setState({info: {[id]: json, ...info}, current: ''});
+        setState({  info: {...info, [id]: json}, current: ''});
+
     })
-    await sleep(60 * 5 * 1000); // Run every 10 mins
+    await sleep(1000 * 60 * 5); // Run every 5 mins
     informationFetcher();
 }
 
