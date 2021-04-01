@@ -9,7 +9,6 @@ let num = 0, STATE = {info: {}, historical: {}};
 const censored = false;
 const sleep_interval = 300;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 let fiatCurrencyRates = {
     USD: 1
 };
@@ -230,16 +229,30 @@ const historicalFetcher = async () => {
     });
 }
 
-try {
-    const myHoldings = require('./holdings.js');
-    holdings = myHoldings;
-} catch (err) {
-    console.log(err);
-    console.log('Holdings file not found - using fallback')
+const loadHoldings = () => {
+    try {
+        // Declaring .env file location path explicitly for Windows environments
+        const env_config = require('dotenv').config({ path: './.env' });
+        let holdingsFilePath;
+
+        if (env_config.error) {
+            console.log(`No custom .env configuration found, loading holdings from root folder.`);
+            holdingsFilePath = `./holdings.js`;
+        }else{
+            holdingsFilePath = process.env.HOLDINGS_FILE_PATH;
+        }
+
+        const myHoldings = require(holdingsFilePath);
+        holdings = myHoldings;
+    } catch (err) {
+        console.log(err);
+        console.log('Holdings file not found - using placeholder fallback.')
+    }
 }
 
+loadHoldings();
 priceFetcher();
 informationFetcher();
-historicalFetcher();
+// historicalFetcher();
 updateUI();
 

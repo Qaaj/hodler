@@ -21,6 +21,7 @@
     "clear": "^0.1.0",
     "cli-color": "^2.0.0",
     "console-table-printer": "^2.7.1",
+    "dotenv": "^8.2.0",
     "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
     "numbro": "^2.3.2"
