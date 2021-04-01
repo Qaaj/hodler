@@ -9,6 +9,7 @@ let num = 0, STATE = {info: {}, historical: {}};
 const censored = false;
 const sleep_interval = 300;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 let fiatCurrencyRates = {
     USD: 1
 };
@@ -207,6 +208,7 @@ const informationFetcher = async () => {
         await sleep(i * sleep_interval);
         const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
         const json = await data.json();
+        fiatCurrencyRates.USD = json.market_data.market_cap.usd / json.market_data.market_cap.eur;
         const info = STATE.info || {};
         setState({  info: {...info, [id]: json}, current: ''});
 
@@ -228,28 +230,16 @@ const historicalFetcher = async () => {
     });
 }
 
-const fiatCurrencyRatesFetcher = async () => {
-    try {
-        const currencyRatesEndpoint = `https://api.exchangeratesapi.io/latest?symbols=USD`;
-        const response = await fetch(currencyRatesEndpoint);
-        const json = await response.json();
-        const rates = json.rates;
-        fiatCurrencyRates = rates;
-    } catch (error) {
-        console.log(`Failed getting fiat currency rates from api.exchangeratesapi.io:`, error);
-    }
-}
-
 try {
     const myHoldings = require('./holdings.js');
     holdings = myHoldings;
 } catch (err) {
+    console.log(err);
     console.log('Holdings file not found - using fallback')
 }
 
-fiatCurrencyRatesFetcher();
 priceFetcher();
 informationFetcher();
-// historicalFetcher();
+historicalFetcher();
 updateUI();
 
